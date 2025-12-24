@@ -1,0 +1,470 @@
+{
+	"info": {
+		"_postman_id": "1dacc069-357a-4cb1-aa59-fdbe644b1e0f",
+		"name": "Topz - OData API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "51017588",
+		"_collection_link": "https://dadosfera-topz-team.postman.co/workspace/acb97187-0199-457a-8fd1-f21af1c082e1/collection/38958889-1dacc069-357a-4cb1-aa59-fdbe644b1e0f?action=share&source=collection_link&creator=51017588"
+	},
+	"item": [
+		{
+			"name": "Get the Schema",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TopzAPIKey}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/v1.0/schema",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1.0",
+						"schema"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show me all orders",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TopzAPIKey}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/v1.0/odata/order?$select=id,name,customer,order_status,total",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1.0",
+						"odata",
+						"order"
+					],
+					"query": [
+						{
+							"key": "$select",
+							"value": "id,name,customer,order_status,total"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show me all orders over $300,000",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TopzAPIKey}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/v1.0/odata/order?$select=id,name,customer,order_status,total&$filter=total gt 300000",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1.0",
+						"odata",
+						"order"
+					],
+					"query": [
+						{
+							"key": "$select",
+							"value": "id,name,customer,order_status,total"
+						},
+						{
+							"key": "$filter",
+							"value": "total gt 300000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show me all orders over $10K in progress",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TopzAPIKey}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/v1.0/odata/order?$select=id,name,customer,order_status,total&$filter=total gt 10000 and order_status eq 'Active Project - In-Progress'",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1.0",
+						"odata",
+						"order"
+					],
+					"query": [
+						{
+							"key": "$select",
+							"value": "id,name,customer,order_status,total"
+						},
+						{
+							"key": "$filter",
+							"value": "total gt 10000 and order_status eq 'Active Project - In-Progress'"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find the 'Gordon Square' order",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TopzAPIKey}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/v1.0/odata/order?$select=id,name,customer,order_status,total&$filter=search eq 'Gordon Square'",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1.0",
+						"odata",
+						"order"
+					],
+					"query": [
+						{
+							"key": "$select",
+							"value": "id,name,customer,order_status,total"
+						},
+						{
+							"key": "$filter",
+							"value": "search eq 'Gordon Square'"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show me orders with high amounts (and/or)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TopzAPIKey}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/v1.0/odata/order?$select=id,name,customer,order_status,cost,sales_tax,total&$filter=(total gt 20000 and cost gt 20000) or sales_tax gt 3000",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1.0",
+						"odata",
+						"order"
+					],
+					"query": [
+						{
+							"key": "$select",
+							"value": "id,name,customer,order_status,cost,sales_tax,total"
+						},
+						{
+							"key": "$filter",
+							"value": "(total gt 20000 and cost gt 20000) or sales_tax gt 3000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show me all orders created by someone",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TopzAPIKey}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/v1.0/odata/order?$select=id,name,customer,order_status,cost,sales_tax,total&$filter=creator eq 'Support, Sean'",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1.0",
+						"odata",
+						"order"
+					],
+					"query": [
+						{
+							"key": "$select",
+							"value": "id,name,customer,order_status,cost,sales_tax,total"
+						},
+						{
+							"key": "$filter",
+							"value": "creator eq 'Support, Sean'"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show me all of the active payment terms",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TopzAPIKey}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/v1.0/odata/payment_term?$select=id,name,active&$filter=active eq true",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1.0",
+						"odata",
+						"payment_term"
+					],
+					"query": [
+						{
+							"key": "$select",
+							"value": "id,name,active"
+						},
+						{
+							"key": "$filter",
+							"value": "active eq true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test payment terms sending no columns",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TopzAPIKey}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/v1.0/odata/payment_term?$filter=active eq true",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1.0",
+						"odata",
+						"payment_term"
+					],
+					"query": [
+						{
+							"key": "$filter",
+							"value": "active eq true"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
