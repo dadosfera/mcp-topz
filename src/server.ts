@@ -112,4 +112,3 @@ export async function runServer(config: ServerConfig): Promise<void> {
   console.error("MCP Topz server running on stdio");
 }
 
-
