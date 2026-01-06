@@ -24,10 +24,28 @@ export interface Order {
   id: string | number;
   name?: string;
   customer?: string;
+  /**
+   * Status do pedido.
+   * Exemplo de valor: 'Active Project - In-Progress'
+   * Valores são case-sensitive e devem corresponder exatamente aos valores da API.
+   */
   order_status?: string;
   total?: number;
+  /**
+   * Custo do pedido.
+   * Identificado no exemplo "Show me orders with high amounts (and/or)"
+   */
   cost?: number;
+  /**
+   * Imposto sobre vendas.
+   * Identificado no exemplo "Show me orders with high amounts (and/or)"
+   */
   sales_tax?: number;
+  /**
+   * Criador do pedido.
+   * Formato: "Sobrenome, Nome" (ex: "Support, Sean")
+   * Identificado no exemplo "Show me all orders created by someone"
+   */
   creator?: string;
   [key: string]: unknown; // Allow additional fields
 }
