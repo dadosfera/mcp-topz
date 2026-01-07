@@ -229,4 +229,3 @@ npm run dev      # Executa em modo desenvolvimento
 
 MIT
 
-
