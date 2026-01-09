@@ -94,22 +94,28 @@ export async function executePaymentTermsTool(
       orderby: input.orderby,
     });
 
-    const count = result.value?.length ?? 0;
-    const summary = `Encontrados ${count} termo(s) de pagamento.`;
+    // Topz API returns: { totalSize: number, done: boolean, objects: PaymentTerm[] }
+    const paymentTerms = result.objects || [];
+    const count = paymentTerms.length;
+    const totalSize = result.totalSize || count;
+    const done = result.done ?? true;
+    
+    const summary = `Found ${count} payment term(s)${totalSize !== count ? ` out of ${totalSize} total` : ''}.`;
 
     return JSON.stringify(
       {
         summary,
         count,
-        data: result.value,
-        nextLink: result["@odata.nextLink"],
+        totalSize,
+        done,
+        data: paymentTerms,
       },
       null,
       2
     );
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Falha ao consultar termos de pagamento: ${error.message}`);
+      throw new Error(`Failed to query payment terms: ${error.message}`);
     }
     throw error;
   }

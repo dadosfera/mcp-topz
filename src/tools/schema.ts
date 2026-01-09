@@ -29,7 +29,7 @@ export async function executeSchemaTool(
     return JSON.stringify(schema, null, 2);
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Falha ao obter schema: ${error.message}`);
+      throw new Error(`Failed to get schema: ${error.message}`);
     }
     throw error;
   }

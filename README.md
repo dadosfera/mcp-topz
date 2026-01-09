@@ -1,36 +1,36 @@
 # MCP Topz
 
-Servidor MCP (Model Context Protocol) para interagir com a API OData da Topz.
+MCP (Model Context Protocol) server for interacting with the Topz OData API.
 
-Este servidor permite que assistentes de IA (como Claude no Cursor ou Claude Desktop) consultem dados da API Topz usando ferramentas estruturadas.
+This server allows AI assistants (such as Claude in Cursor or Claude Desktop) to query Topz API data using structured tools.
 
-## 🚀 Instalação
+## 🚀 Installation
 
-### Pré-requisitos
+### Prerequisites
 
-- Node.js 18 ou superior
-- npm ou yarn
-- Chave de API da Topz
+- Node.js 18 or higher
+- npm or yarn
+- Topz API key
 
-### Instalação das dependências
+### Install dependencies
 
 ```bash
 npm install
 ```
 
-### Configuração
+### Configuration
 
-1. Copie o arquivo de exemplo de configuração:
+1. Copy the example configuration file:
 
 ```bash
 cp env.example .env
 ```
 
-2. Edite o arquivo `.env` com suas credenciais:
+2. Edit the `.env` file with your credentials:
 
 ```env
-TOPZ_API_KEY=sua_chave_api_aqui
-TOPZ_BASE_URL=https://sua-instancia-topz.com
+TOPZ_API_KEY=your_api_key_here
+TOPZ_BASE_URL=https://your-topz-instance.com
 ```
 
 ### Build
@@ -39,42 +39,42 @@ TOPZ_BASE_URL=https://sua-instancia-topz.com
 npm run build
 ```
 
-## 📖 Uso
+## 📖 Usage
 
-### Executar o servidor
+### Run the server
 
 ```bash
 npm start
 ```
 
-Ou em modo de desenvolvimento:
+Or in development mode:
 
 ```bash
 npm run dev
 ```
 
-### Configuração no Cursor
+### Configuration in Cursor
 
-Adicione a seguinte configuração no arquivo `~/.cursor/mcp.json`:
+Add the following configuration to the `~/.cursor/mcp.json` file:
 
 ```json
 {
   "mcpServers": {
     "topz": {
       "command": "node",
-      "args": ["/caminho/para/mcp-topz/dist/index.js"],
+      "args": ["/path/to/mcp-topz/dist/index.js"],
       "env": {
-        "TOPZ_API_KEY": "sua_chave_api_aqui",
-        "TOPZ_BASE_URL": "https://sua-instancia-topz.com"
+        "TOPZ_API_KEY": "your_api_key_here",
+        "TOPZ_BASE_URL": "https://your-topz-instance.com"
       }
     }
   }
 }
 ```
 
-### Configuração no Claude Desktop
+### Configuration in Claude Desktop
 
-Adicione a seguinte configuração no arquivo de configuração do Claude Desktop:
+Add the following configuration to the Claude Desktop configuration file:
 
 **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
@@ -84,148 +84,147 @@ Adicione a seguinte configuração no arquivo de configuração do Claude Deskto
   "mcpServers": {
     "topz": {
       "command": "node",
-      "args": ["/caminho/para/mcp-topz/dist/index.js"],
+      "args": ["/path/to/mcp-topz/dist/index.js"],
       "env": {
-        "TOPZ_API_KEY": "sua_chave_api_aqui",
-        "TOPZ_BASE_URL": "https://sua-instancia-topz.com"
+        "TOPZ_API_KEY": "your_api_key_here",
+        "TOPZ_BASE_URL": "https://your-topz-instance.com"
       }
     }
   }
 }
 ```
 
-## 🛠️ Ferramentas Disponíveis
+## 🛠️ Available Tools
 
 ### `get_schema`
 
-Obtém o schema completo da API OData da Topz.
+Gets the complete schema of the Topz OData API.
 
-**Parâmetros**: Nenhum
+**Parameters**: None
 
-**Exemplo de uso**:
-> "Mostre-me o schema da API Topz"
+**Usage example**:
+> "Show me the Topz API schema"
 
 ---
 
 ### `query_orders`
 
-Consulta pedidos (orders) usando sintaxe OData.
+Query orders using OData syntax.
 
-**Parâmetros**:
+**Parameters**:
 
-| Parâmetro | Tipo | Descrição |
-|-----------|------|-----------|
-| `select` | string | Campos a retornar, separados por vírgula |
-| `filter` | string | Filtro OData |
-| `top` | number | Limite de resultados |
-| `skip` | number | Resultados a pular (paginação) |
-| `orderby` | string | Campo para ordenação |
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `select` | string | Fields to return, comma-separated |
+| `filter` | string | OData filter |
+| `top` | number | Result limit |
+| `skip` | number | Results to skip (pagination) |
+| `orderby` | string | Field for sorting |
 
-**Exemplos de uso**:
+**Usage examples**:
 
-> "Mostre todos os pedidos"
+> "Show all orders"
 
-> "Busque pedidos com valor acima de $300.000"
+> "Search for orders with value above $300,000"
 > (filter: `total gt 300000`)
 
-> "Encontre pedidos em progresso com valor maior que $10.000"
+> "Find orders in progress with value greater than $10,000"
 > (filter: `total gt 10000 and order_status eq 'Active Project - In-Progress'`)
 
-> "Busque o pedido 'Gordon Square'"
+> "Search for the 'Gordon Square' order"
 > (filter: `search eq 'Gordon Square'`)
 
-> "Liste os 10 maiores pedidos"
+> "List the top 10 orders"
 > (top: `10`, orderby: `total desc`)
 
 ---
 
 ### `query_payment_terms`
 
-Consulta termos de pagamento usando sintaxe OData.
+Query payment terms using OData syntax.
 
-**Parâmetros**:
+**Parameters**:
 
-| Parâmetro | Tipo | Descrição |
-|-----------|------|-----------|
-| `select` | string | Campos a retornar, separados por vírgula |
-| `filter` | string | Filtro OData |
-| `top` | number | Limite de resultados |
-| `skip` | number | Resultados a pular (paginação) |
-| `orderby` | string | Campo para ordenação |
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `select` | string | Fields to return, comma-separated |
+| `filter` | string | OData filter |
+| `top` | number | Result limit |
+| `skip` | number | Results to skip (pagination) |
+| `orderby` | string | Field for sorting |
 
-**Exemplos de uso**:
+**Usage examples**:
 
-> "Mostre todos os termos de pagamento ativos"
+> "Show all active payment terms"
 > (filter: `active eq true`)
 
-> "Liste os termos de pagamento ordenados por nome"
+> "List payment terms sorted by name"
 > (orderby: `name asc`)
 
-## 📚 Referência OData
+## 📚 OData Reference
 
-### Operadores de Filtro
+### Filter Operators
 
-| Operador | Descrição | Exemplo |
-|----------|-----------|---------|
-| `eq` | Igual a | `status eq 'Active'` |
-| `ne` | Diferente de | `status ne 'Closed'` |
-| `gt` | Maior que | `total gt 10000` |
-| `ge` | Maior ou igual | `total ge 10000` |
-| `lt` | Menor que | `total lt 10000` |
-| `le` | Menor ou igual | `total le 10000` |
-| `and` | E lógico | `total gt 1000 and status eq 'Active'` |
-| `or` | OU lógico | `status eq 'Active' or status eq 'Pending'` |
+| Operator | Description | Example |
+|----------|-------------|---------|
+| `eq` | Equal to | `status eq 'Active'` |
+| `ne` | Not equal to | `status ne 'Closed'` |
+| `gt` | Greater than | `total gt 10000` |
+| `ge` | Greater than or equal | `total ge 10000` |
+| `lt` | Less than | `total lt 10000` |
+| `le` | Less than or equal | `total le 10000` |
+| `and` | Logical AND | `total gt 1000 and status eq 'Active'` |
+| `or` | Logical OR | `status eq 'Active' or status eq 'Pending'` |
 
-### Filtro de Busca
+### Search Filter
 
-A API Topz suporta um filtro especial `search` para busca textual:
+The Topz API supports a special `search` filter for text search:
 
 ```
-filter: search eq 'termo de busca'
+filter: search eq 'search term'
 ```
 
-## 🏗️ Estrutura do Projeto
+## 🏗️ Project Structure
 
 ```
 mcp-topz/
 ├── src/
-│   ├── index.ts              # Ponto de entrada
-│   ├── server.ts             # Configuração do servidor MCP
+│   ├── index.ts              # Entry point
+│   ├── server.ts             # MCP server configuration
 │   ├── api/
-│   │   ├── client.ts         # Cliente HTTP
-│   │   └── types.ts          # Tipos TypeScript
+│   │   ├── client.ts         # HTTP client
+│   │   └── types.ts          # TypeScript types
 │   ├── tools/
-│   │   ├── index.ts          # Export das tools
+│   │   ├── index.ts          # Tools export
 │   │   ├── schema.ts         # Tool: get_schema
 │   │   ├── orders.ts         # Tool: query_orders
 │   │   └── payment-terms.ts  # Tool: query_payment_terms
 │   └── utils/
-│       └── odata-builder.ts  # Utilitário OData
-├── dist/                     # Build compilado
+│       └── odata-builder.ts  # OData utility
+├── dist/                     # Compiled build
 ├── package.json
 ├── tsconfig.json
 └── README.md
 ```
 
-## 🔧 Desenvolvimento
+## 🔧 Development
 
-### Adicionar nova ferramenta
+### Add new tool
 
-1. Crie um novo arquivo em `src/tools/`
-2. Defina a tool definition com nome, descrição e schema
-3. Implemente a função de execução
-4. Exporte no `src/tools/index.ts`
-5. Registre no `src/server.ts`
+1. Create a new file in `src/tools/`
+2. Define the tool definition with name, description and schema
+3. Implement the execution function
+4. Export in `src/tools/index.ts`
+5. Register in `src/server.ts`
 
-### Scripts disponíveis
+### Available scripts
 
 ```bash
-npm run build    # Compila TypeScript
-npm start        # Executa o servidor compilado
-npm run dev      # Executa em modo desenvolvimento
+npm run build    # Compile TypeScript
+npm start        # Run the compiled server
+npm run dev      # Run in development mode
 ```
 
-## 📝 Licença
+## 📝 License
 
 MIT
-

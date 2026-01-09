@@ -10,22 +10,27 @@ export const queryOrdersToolDefinition = {
   name: "query_orders",
   description: `Consulta pedidos (orders) na API Topz usando sintaxe OData.
 
+IMPORTANTE: Quando o usuário menciona valores monetários como "$300,000" ou "$300.000", você DEVE converter para número SEM vírgula ou ponto: 300000.
+
 EXEMPLOS DE USO BASEADOS EM CONSULTAS REAIS DA API:
 
 1. Listar todos os pedidos com campos específicos:
    select="id,name,customer,order_status,total"
    Descrição: Retorna todos os pedidos com apenas os campos especificados.
 
-2. Pedidos acima de $300.000:
+2. Pedidos acima de $300.000 (quando o usuário diz "$300,000" ou "$300.000", use 300000):
    filter="total gt 300000"
    select="id,name,customer,order_status,total"
-   Descrição: Filtra pedidos com valor total maior que $300.000 usando o operador gt.
+   Descrição: Filtra pedidos com valor total maior que $300.000 usando o operador gt. 
+   IMPORTANTE: O valor 300000 é um número, não uma string. Não use aspas.
 
-3. Pedidos acima de $10K em progresso:
+3. Pedidos acima de $10K em progresso (quando o usuário diz "$10K" ou "$10.000", use 10000):
    filter="total gt 10000 and order_status eq 'Active Project - In-Progress'"
    select="id,name,customer,order_status,total"
    Descrição: Combina duas condições usando o operador and. Filtra pedidos com valor maior que $10.000 E status igual a 'Active Project - In-Progress'.
-   Nota: O valor de order_status deve ser exatamente como aparece na API (case-sensitive).
+   IMPORTANTE: 
+   - O valor 10000 é um número, não uma string. Não use aspas.
+   - O valor de order_status deve ser exatamente como aparece na API (case-sensitive).
 
 4. Buscar pedido por texto (busca textual):
    filter="search eq 'Gordon Square'"
@@ -125,6 +130,8 @@ export async function executeOrdersTool(
   input: QueryOrdersInput
 ): Promise<string> {
   try {
+    console.error(`[MCP-TOPZ] executeOrdersTool - Input:`, JSON.stringify(input, null, 2));
+    
     const result = await client.queryOrders({
       select: input.select,
       filter: input.filter,
@@ -133,22 +140,29 @@ export async function executeOrdersTool(
       orderby: input.orderby,
     });
 
-    const count = result.value?.length ?? 0;
-    const summary = `Encontrados ${count} pedido(s).`;
+    // Topz API returns: { totalSize: number, done: boolean, objects: Order[] }
+    const orders = result.objects || [];
+    const count = orders.length;
+    const totalSize = result.totalSize || count;
+    const done = result.done ?? true;
+    
+    const summary = `Found ${count} order(s)${totalSize !== count ? ` out of ${totalSize} total` : ''}.`;
 
     return JSON.stringify(
       {
         summary,
         count,
-        data: result.value,
-        nextLink: result["@odata.nextLink"],
+        totalSize,
+        done,
+        data: orders,
       },
       null,
       2
     );
   } catch (error) {
+    console.error(`[MCP-TOPZ] executeOrdersTool - Error:`, error);
     if (error instanceof Error) {
-      throw new Error(`Falha ao consultar pedidos: ${error.message}`);
+      throw new Error(`Failed to query orders: ${error.message}`);
     }
     throw error;
   }

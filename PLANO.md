@@ -1,216 +1,215 @@
-# Plano de Implementação - MCP Server para Topz OData API
+# Implementation Plan - MCP Server for Topz OData API
 
-## 📋 Visão Geral
+## 📋 Overview
 
-Este documento descreve o plano completo para criar um servidor MCP (Model Context Protocol) que permite interagir com a API OData da Topz através de ferramentas (tools) que podem ser utilizadas por assistentes de IA.
+This document describes the complete plan to create an MCP (Model Context Protocol) server that allows interaction with the Topz OData API through tools that can be used by AI assistants.
 
-## 🎯 Objetivos
+## 🎯 Objectives
 
-1. Criar um servidor MCP em TypeScript/Node.js
-2. Implementar ferramentas para consultar a API OData da Topz
-3. Suportar autenticação Bearer Token
-4. Permitir consultas flexíveis usando sintaxe OData ($select, $filter, etc.)
-5. Fornecer documentação completa e exemplos de uso
+1. Create an MCP server in TypeScript/Node.js
+2. Implement tools to query the Topz OData API
+3. Support Bearer Token authentication
+4. Allow flexible queries using OData syntax ($select, $filter, etc.)
+5. Provide complete documentation and usage examples
 
-## 📁 Estrutura do Projeto
+## 📁 Project Structure
 
 ```
 mcp-topz/
 ├── src/
-│   ├── index.ts                 # Ponto de entrada do servidor MCP
-│   ├── server.ts                # Configuração e inicialização do servidor
+│   ├── index.ts                 # MCP server entry point
+│   ├── server.ts                 # Server configuration and initialization
 │   ├── api/
-│   │   ├── client.ts            # Cliente HTTP para a API Topz
-│   │   └── types.ts             # Tipos TypeScript para a API
+│   │   ├── client.ts             # HTTP client for Topz API
+│   │   └── types.ts              # TypeScript types for the API
 │   ├── tools/
-│   │   ├── schema.ts            # Tool: obter schema da API
-│   │   ├── orders.ts            # Tool: consultar orders
-│   │   └── payment-terms.ts     # Tool: consultar payment terms
+│   │   ├── schema.ts             # Tool: get API schema
+│   │   ├── orders.ts             # Tool: query orders
+│   │   └── payment-terms.ts      # Tool: query payment terms
 │   └── utils/
-│       ├── odata-builder.ts     # Utilitário para construir queries OData
-│       └── errors.ts            # Tratamento de erros
+│       ├── odata-builder.ts     # Utility to build OData queries
+│       └── errors.ts            # Error handling
 ├── package.json
 ├── tsconfig.json
 ├── .env.example
 ├── .gitignore
 ├── README.md
-└── PLANO.md (este arquivo)
+└── PLANO.md (this file)
 ```
 
-## 🔧 Configurações e Dependências
+## 🔧 Configuration and Dependencies
 
-### Dependências Principais
+### Main Dependencies
 
-- `@modelcontextprotocol/sdk` - SDK oficial do MCP
-- `node-fetch` ou `axios` - Cliente HTTP
-- `dotenv` - Gerenciamento de variáveis de ambiente
-- `zod` - Validação de schemas (opcional, mas recomendado)
+- `@modelcontextprotocol/sdk` - Official MCP SDK
+- `node-fetch` or `axios` - HTTP client
+- `dotenv` - Environment variable management
+- `zod` - Schema validation (optional, but recommended)
 
-### Dependências de Desenvolvimento
+### Development Dependencies
 
-- `typescript` - Compilador TypeScript
-- `@types/node` - Tipos para Node.js
-- `tsx` ou `ts-node` - Executar TypeScript diretamente
-- `eslint` - Linter (opcional)
-- `prettier` - Formatação (opcional)
+- `typescript` - TypeScript compiler
+- `@types/node` - Types for Node.js
+- `tsx` or `ts-node` - Run TypeScript directly
+- `eslint` - Linter (optional)
+- `prettier` - Formatting (optional)
 
-### Variáveis de Ambiente
+### Environment Variables
 
 ```env
 TOPZ_API_KEY=your_api_key_here
-TOPZ_BASE_URL=https://api.topz.com  # ou URL base da API
+TOPZ_BASE_URL=https://api.topz.com  # or API base URL
 ```
 
-## 🛠️ Implementação das Ferramentas (Tools)
+## 🛠️ Tool Implementation
 
 ### 1. Tool: `get_schema`
-**Descrição**: Obtém o schema completo da API OData
+**Description**: Gets the complete OData API schema
 
-**Parâmetros**: Nenhum
+**Parameters**: None
 
-**Retorno**: Schema JSON da API
+**Return**: API JSON schema
 
 **Endpoint**: `GET /api/v1.0/schema`
 
 ### 2. Tool: `query_orders`
-**Descrição**: Consulta orders (pedidos) usando sintaxe OData
+**Description**: Query orders using OData syntax
 
-**Parâmetros**:
-- `select` (opcional): Campos a retornar (ex: "id,name,customer,total")
-- `filter` (opcional): Filtro OData (ex: "total gt 300000")
-- `top` (opcional): Limite de resultados
-- `skip` (opcional): Número de resultados para pular
-- `orderby` (opcional): Campo para ordenação
+**Parameters**:
+- `select` (optional): Fields to return (ex: "id,name,customer,total")
+- `filter` (optional): OData filter (ex: "total gt 300000")
+- `top` (optional): Result limit
+- `skip` (optional): Number of results to skip
+- `orderby` (optional): Field for sorting
 
-**Retorno**: Lista de orders conforme os filtros aplicados
+**Return**: List of orders according to applied filters
 
 **Endpoint**: `GET /api/v1.0/odata/order`
 
-**Exemplos de uso**:
-- Buscar todos os orders
-- Buscar orders com total > $300,000
-- Buscar orders em progresso com total > $10K
-- Buscar orders por nome (search)
-- Buscar orders criados por alguém específico
+**Usage examples**:
+- Get all orders
+- Get orders with total > $300,000
+- Get orders in progress with total > $10K
+- Search orders by name (search)
+- Get orders created by a specific person
 
 ### 3. Tool: `query_payment_terms`
-**Descrição**: Consulta payment terms (termos de pagamento) usando sintaxe OData
+**Description**: Query payment terms using OData syntax
 
-**Parâmetros**:
-- `select` (opcional): Campos a retornar (ex: "id,name,active")
-- `filter` (opcional): Filtro OData (ex: "active eq true")
-- `top` (opcional): Limite de resultados
-- `skip` (opcional): Número de resultados para pular
-- `orderby` (opcional): Campo para ordenação
+**Parameters**:
+- `select` (optional): Fields to return (ex: "id,name,active")
+- `filter` (optional): OData filter (ex: "active eq true")
+- `top` (optional): Result limit
+- `skip` (optional): Number of results to skip
+- `orderby` (optional): Field for sorting
 
-**Retorno**: Lista de payment terms conforme os filtros aplicados
+**Return**: List of payment terms according to applied filters
 
 **Endpoint**: `GET /api/v1.0/odata/payment_term`
 
-## 📝 Detalhamento da Implementação
+## 📝 Implementation Details
 
-### 1. Cliente HTTP (`src/api/client.ts`)
+### 1. HTTP Client (`src/api/client.ts`)
 
-- Classe `TopzApiClient` que encapsula todas as chamadas HTTP
-- Métodos para cada endpoint
-- Tratamento de erros HTTP
-- Headers padrão (Content-Type, Accept, Authorization)
-- Suporte a query parameters OData
+- `TopzApiClient` class that encapsulates all HTTP calls
+- Methods for each endpoint
+- HTTP error handling
+- Default headers (Content-Type, Accept, Authorization)
+- OData query parameter support
 
-### 2. Builder OData (`src/utils/odata-builder.ts`)
+### 2. OData Builder (`src/utils/odata-builder.ts`)
 
-- Função utilitária para construir URLs com query parameters OData
-- Suporte para:
+- Utility function to build URLs with OData query parameters
+- Support for:
   - `$select`
   - `$filter`
   - `$top`
   - `$skip`
   - `$orderby`
-  - `$count` (se suportado)
+  - `$count` (if supported)
 
-### 3. Servidor MCP (`src/server.ts`)
+### 3. MCP Server (`src/server.ts`)
 
-- Inicialização do servidor MCP usando o SDK
-- Registro de todas as tools
-- Tratamento de erros global
-- Logging básico
+- MCP server initialization using the SDK
+- Registration of all tools
+- Global error handling
+- Basic logging
 
 ### 4. Tools (`src/tools/*.ts`)
 
-Cada tool deve:
-- Validar parâmetros de entrada
-- Construir a query OData apropriada
-- Fazer a chamada à API através do cliente
-- Tratar erros e retornar mensagens amigáveis
-- Retornar dados formatados
+Each tool should:
+- Validate input parameters
+- Build the appropriate OData query
+- Make the API call through the client
+- Handle errors and return friendly messages
+- Return formatted data
 
-## 🔐 Autenticação
+## 🔐 Authentication
 
-- Todas as requisições usam Bearer Token
-- Token obtido da variável de ambiente `TOPZ_API_KEY`
+- All requests use Bearer Token
+- Token obtained from the `TOPZ_API_KEY` environment variable
 - Header: `Authorization: Bearer {token}`
 
-## 📚 Documentação
+## 📚 Documentation
 
-### README.md deve incluir:
+### README.md should include:
 
-1. **Descrição do projeto**
-2. **Instalação**
-   - Pré-requisitos (Node.js, npm/yarn)
-   - Instalação de dependências
-   - Configuração de variáveis de ambiente
+1. **Project description**
+2. **Installation**
+   - Prerequisites (Node.js, npm/yarn)
+   - Dependency installation
+   - Environment variable configuration
 
-3. **Uso**
-   - Como executar o servidor MCP
-   - Como configurar no Cursor/Claude Desktop
-   - Exemplos de uso de cada tool
+3. **Usage**
+   - How to run the MCP server
+   - How to configure in Cursor/Claude Desktop
+   - Examples of using each tool
 
 4. **API Reference**
-   - Documentação de cada tool
-   - Parâmetros aceitos
-   - Exemplos de queries OData
+   - Documentation for each tool
+   - Accepted parameters
+   - OData query examples
 
-5. **Desenvolvimento**
-   - Como adicionar novas tools
-   - Estrutura do código
-   - Como testar
+5. **Development**
+   - How to add new tools
+   - Code structure
+   - How to test
 
-## 🧪 Testes (Futuro)
+## 🧪 Tests (Future)
 
-- Testes unitários para o cliente HTTP
-- Testes para o builder OData
-- Testes de integração para as tools
-- Mock da API para testes
+- Unit tests for the HTTP client
+- Tests for the OData builder
+- Integration tests for tools
+- API mock for testing
 
-## 🚀 Próximos Passos
+## 🚀 Next Steps
 
-1. ✅ Criar estrutura de pastas
-2. ✅ Configurar package.json com dependências
-3. ✅ Configurar TypeScript (tsconfig.json)
-4. ✅ Criar .env.example e .gitignore
-5. ✅ Implementar cliente HTTP básico
-6. ✅ Implementar builder OData
-7. ✅ Implementar tool get_schema
-8. ✅ Implementar tool query_orders
-9. ✅ Implementar tool query_payment_terms
-10. ✅ Configurar servidor MCP
-11. ✅ Criar README.md completo
-12. ✅ Testar integração com Cursor/Claude Desktop
+1. ✅ Create folder structure
+2. ✅ Configure package.json with dependencies
+3. ✅ Configure TypeScript (tsconfig.json)
+4. ✅ Create .env.example and .gitignore
+5. ✅ Implement basic HTTP client
+6. ✅ Implement OData builder
+7. ✅ Implement get_schema tool
+8. ✅ Implement query_orders tool
+9. ✅ Implement query_payment_terms tool
+10. ✅ Configure MCP server
+11. ✅ Create complete README.md
+12. ✅ Test integration with Cursor/Claude Desktop
 
-## 📌 Notas Importantes
+## 📌 Important Notes
 
-- A API usa OData v4, então devemos seguir a especificação OData
-- Todos os endpoints retornam JSON
-- A API pode ter rate limiting - considerar implementar retry logic
-- Alguns campos podem ser opcionais nas respostas
-- O filtro `search` parece ser um campo especial para busca textual
+- The API uses OData v4, so we should follow the OData specification
+- All endpoints return JSON
+- The API may have rate limiting - consider implementing retry logic
+- Some fields may be optional in responses
+- The `search` filter appears to be a special field for text search
 
-## 🔄 Melhorias Futuras (Opcional)
+## 🔄 Future Improvements (Optional)
 
-- Suporte a paginação automática
-- Cache de schema
-- Suporte a outros endpoints OData (se houver)
-- Validação mais robusta de queries OData
-- Suporte a operações de escrita (POST, PATCH, DELETE) se a API permitir
-- Métricas e logging avançado
-
+- Automatic pagination support
+- Schema caching
+- Support for other OData endpoints (if available)
+- More robust OData query validation
+- Support for write operations (POST, PATCH, DELETE) if the API allows
+- Advanced metrics and logging

@@ -88,13 +88,13 @@ export function createServer(config: ServerConfig): Server {
         }
 
         default:
-          throw new Error(`Ferramenta desconhecida: ${name}`);
+          throw new Error(`Unknown tool: ${name}`);
       }
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Erro desconhecido";
+        error instanceof Error ? error.message : "Unknown error";
       return {
-        content: [{ type: "text", text: `Erro: ${errorMessage}` }],
+        content: [{ type: "text", text: `Error: ${errorMessage}` }],
         isError: true,
       };
     }

@@ -12,11 +12,12 @@ export interface ODataQueryOptions {
   count?: boolean;
 }
 
-// Generic OData response wrapper
+// Generic OData response wrapper for Topz API
+// Topz API returns: { totalSize: number, done: boolean, objects: T[] }
 export interface ODataResponse<T> {
-  value: T[];
-  "@odata.count"?: number;
-  "@odata.nextLink"?: string;
+  totalSize: number;
+  done: boolean;
+  objects: T[];
 }
 
 // Order entity
