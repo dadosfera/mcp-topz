@@ -22,12 +22,7 @@ import {
   executePaymentTermsTool,
 } from "./tools/index.js";
 
-export interface ServerConfig {
-  apiKey: string;
-  baseUrl: string;
-}
-
-export function createServer(config: ServerConfig): Server {
+export function createServer(config) {
   const server = new Server(
     {
       name: "mcp-topz",
@@ -103,7 +98,7 @@ export function createServer(config: ServerConfig): Server {
   return server;
 }
 
-export async function runServer(config: ServerConfig): Promise<void> {
+export async function runServer(config) {
   const server = createServer(config);
   const transport = new StdioServerTransport();
   await server.connect(transport);
@@ -111,4 +106,3 @@ export async function runServer(config: ServerConfig): Promise<void> {
   // Log to stderr (stdout is used for MCP communication)
   console.error("MCP Topz server running on stdio");
 }
-

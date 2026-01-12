@@ -4,7 +4,6 @@
  */
 
 import { z } from "zod";
-import type { TopzApiClient } from "../api/client.js";
 
 export const queryPaymentTermsToolDefinition = {
   name: "query_payment_terms",
@@ -43,7 +42,7 @@ PAGINAÇÃO E ORDENAÇÃO:
 - skip: Resultados a pular (ex: skip=20, top=10 para página 3)
 - orderby: Ordenação (ex: orderby="name asc" ou orderby="id desc")`,
   inputSchema: {
-    type: "object" as const,
+    type: "object",
     properties: {
       select: {
         type: "string",
@@ -67,7 +66,7 @@ PAGINAÇÃO E ORDENAÇÃO:
         description: "Campo para ordenação. Ex: 'name asc'",
       },
     },
-    required: [] as string[],
+    required: [],
   },
 };
 
@@ -79,12 +78,7 @@ export const queryPaymentTermsInputSchema = z.object({
   orderby: z.string().optional(),
 });
 
-export type QueryPaymentTermsInput = z.infer<typeof queryPaymentTermsInputSchema>;
-
-export async function executePaymentTermsTool(
-  client: TopzApiClient,
-  input: QueryPaymentTermsInput
-): Promise<string> {
+export async function executePaymentTermsTool(client, input) {
   try {
     const result = await client.queryPaymentTerms({
       select: input.select,
@@ -120,4 +114,3 @@ export async function executePaymentTermsTool(
     throw error;
   }
 }
-

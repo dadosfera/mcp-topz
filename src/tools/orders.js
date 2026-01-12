@@ -4,7 +4,6 @@
  */
 
 import { z } from "zod";
-import type { TopzApiClient } from "../api/client.js";
 
 export const queryOrdersToolDefinition = {
   name: "query_orders",
@@ -86,7 +85,7 @@ PAGINAÇÃO E ORDENAÇÃO:
 - skip: Resultados a pular (ex: skip=20, top=10 para página 3)
 - orderby: Ordenação (ex: orderby="total desc" ou orderby="name asc")`,
   inputSchema: {
-    type: "object" as const,
+    type: "object",
     properties: {
       select: {
         type: "string",
@@ -111,7 +110,7 @@ PAGINAÇÃO E ORDENAÇÃO:
         description: "Campo para ordenação. Ex: 'total desc' ou 'name asc'",
       },
     },
-    required: [] as string[],
+    required: [],
   },
 };
 
@@ -123,12 +122,7 @@ export const queryOrdersInputSchema = z.object({
   orderby: z.string().optional(),
 });
 
-export type QueryOrdersInput = z.infer<typeof queryOrdersInputSchema>;
-
-export async function executeOrdersTool(
-  client: TopzApiClient,
-  input: QueryOrdersInput
-): Promise<string> {
+export async function executeOrdersTool(client, input) {
   try {
     console.error(`[MCP-TOPZ] executeOrdersTool - Input:`, JSON.stringify(input, null, 2));
     
@@ -167,4 +161,3 @@ export async function executeOrdersTool(
     throw error;
   }
 }
-

@@ -4,26 +4,21 @@
  */
 
 import { z } from "zod";
-import type { TopzApiClient } from "../api/client.js";
 
 export const getSchemaToolDefinition = {
   name: "get_schema",
   description:
     "Obtém o schema completo da API OData da Topz. Útil para descobrir quais entidades e campos estão disponíveis para consulta.",
   inputSchema: {
-    type: "object" as const,
+    type: "object",
     properties: {},
-    required: [] as string[],
+    required: [],
   },
 };
 
 export const getSchemaInputSchema = z.object({});
 
-export type GetSchemaInput = z.infer<typeof getSchemaInputSchema>;
-
-export async function executeSchemaTool(
-  client: TopzApiClient
-): Promise<string> {
+export async function executeSchemaTool(client) {
   try {
     const schema = await client.getSchema();
     return JSON.stringify(schema, null, 2);
@@ -34,4 +29,3 @@ export async function executeSchemaTool(
     throw error;
   }
 }
-

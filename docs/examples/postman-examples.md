@@ -1,200 +1,199 @@
-# Exemplos de Consultas OData - API Topz
+# OData Query Examples - Topz API
 
-Este documento contém exemplos reais de consultas extraídos da coleção do Postman da API Topz OData.
+This document contains real query examples extracted from the Topz OData API Postman collection.
 
-## Orders (Pedidos)
+## Orders
 
-### Exemplo 1: Listar todos os pedidos com campos específicos
+### Example 1: List all orders with specific fields
 
-**Nome do exemplo**: "Show me all orders"
+**Example name**: "Show me all orders"
 
-**Query completa**: 
+**Complete query**: 
 ```
 GET /api/v1.0/odata/order?$select=id,name,customer,order_status,total
 ```
 
-**Parâmetros**:
+**Parameters**:
 - `$select`: `id,name,customer,order_status,total`
 
-**Descrição**: Retorna todos os pedidos com apenas os campos especificados. Útil para reduzir o tamanho da resposta quando não são necessários todos os campos.
+**Description**: Returns all orders with only the specified fields. Useful to reduce response size when not all fields are needed.
 
 ---
 
-### Exemplo 2: Pedidos acima de $300.000
+### Example 2: Orders over $300,000
 
-**Nome do exemplo**: "Show me all orders over $300,000"
+**Example name**: "Show me all orders over $300,000"
 
-**Query completa**: 
+**Complete query**: 
 ```
 GET /api/v1.0/odata/order?$select=id,name,customer,order_status,total&$filter=total gt 300000
 ```
 
-**Parâmetros**:
+**Parameters**:
 - `$select`: `id,name,customer,order_status,total`
 - `$filter`: `total gt 300000`
 
-**Descrição**: Filtra pedidos com valor total maior que $300.000 usando o operador `gt` (greater than).
+**Description**: Filters orders with total value greater than $300,000 using the `gt` (greater than) operator.
 
 ---
 
-### Exemplo 3: Pedidos acima de $10K em progresso
+### Example 3: Orders over $10K in progress
 
-**Nome do exemplo**: "Show me all orders over $10K in progress"
+**Example name**: "Show me all orders over $10K in progress"
 
-**Query completa**: 
+**Complete query**: 
 ```
 GET /api/v1.0/odata/order?$select=id,name,customer,order_status,total&$filter=total gt 10000 and order_status eq 'Active Project - In-Progress'
 ```
 
-**Parâmetros**:
+**Parameters**:
 - `$select`: `id,name,customer,order_status,total`
 - `$filter`: `total gt 10000 and order_status eq 'Active Project - In-Progress'`
 
-**Descrição**: Combina duas condições usando o operador `and`. Filtra pedidos com valor maior que $10.000 E status igual a 'Active Project - In-Progress'.
+**Description**: Combines two conditions using the `and` operator. Filters orders with value greater than $10,000 AND status equal to 'Active Project - In-Progress'.
 
-**Observações importantes**:
-- O valor de `order_status` deve ser exatamente como aparece na API (case-sensitive)
-- Strings em filtros OData devem estar entre aspas simples
+**Important observations**:
+- The `order_status` value must be exactly as it appears in the API (case-sensitive)
+- Strings in OData filters must be between single quotes
 
 ---
 
-### Exemplo 4: Buscar pedido por texto
+### Example 4: Search order by text
 
-**Nome do exemplo**: "Find the 'Gordon Square' order"
+**Example name**: "Find the 'Gordon Square' order"
 
-**Query completa**: 
+**Complete query**: 
 ```
 GET /api/v1.0/odata/order?$select=id,name,customer,order_status,total&$filter=search eq 'Gordon Square'
 ```
 
-**Parâmetros**:
+**Parameters**:
 - `$select`: `id,name,customer,order_status,total`
 - `$filter`: `search eq 'Gordon Square'`
 
-**Descrição**: Usa o filtro especial `search` para busca textual. Este é um filtro especial da API Topz que permite buscar por texto em múltiplos campos.
+**Description**: Uses the special `search` filter for text search. This is a special Topz API filter that allows searching by text across multiple fields.
 
-**Observações importantes**:
-- O campo `search` é um filtro especial da API Topz, não um campo real da entidade
-- Permite busca textual em múltiplos campos do pedido
-- Útil para encontrar pedidos por nome, cliente, ou outros campos textuais
+**Important observations**:
+- The `search` field is a special Topz API filter, not a real entity field
+- Allows text search across multiple order fields
+- Useful for finding orders by name, customer, or other text fields
 
 ---
 
-### Exemplo 5: Pedidos com valores altos (combinação AND/OR)
+### Example 5: Orders with high amounts (AND/OR combination)
 
-**Nome do exemplo**: "Show me orders with high amounts (and/or)"
+**Example name**: "Show me orders with high amounts (and/or)"
 
-**Query completa**: 
+**Complete query**: 
 ```
 GET /api/v1.0/odata/order?$select=id,name,customer,order_status,cost,sales_tax,total&$filter=(total gt 20000 and cost gt 20000) or sales_tax gt 3000
 ```
 
-**Parâmetros**:
+**Parameters**:
 - `$select`: `id,name,customer,order_status,cost,sales_tax,total`
 - `$filter`: `(total gt 20000 and cost gt 20000) or sales_tax gt 3000`
 
-**Descrição**: Demonstra uso de parênteses para agrupar condições e combinar operadores `and` e `or`. Retorna pedidos onde:
-- (total > $20.000 E cost > $20.000) OU
-- sales_tax > $3.000
+**Description**: Demonstrates use of parentheses to group conditions and combine `and` and `or` operators. Returns orders where:
+- (total > $20,000 AND cost > $20,000) OR
+- sales_tax > $3,000
 
-**Campos adicionais identificados**:
-- `cost`: Custo do pedido
-- `sales_tax`: Imposto sobre vendas
+**Additional identified fields**:
+- `cost`: Order cost
+- `sales_tax`: Sales tax
 
-**Observações importantes**:
-- Parênteses são necessários para controlar a precedência dos operadores lógicos
-- Permite criar filtros complexos combinando múltiplas condições
+**Important observations**:
+- Parentheses are necessary to control the precedence of logical operators
+- Allows creating complex filters combining multiple conditions
 
 ---
 
-### Exemplo 6: Pedidos criados por alguém
+### Example 6: Orders created by someone
 
-**Nome do exemplo**: "Show me all orders created by someone"
+**Example name**: "Show me all orders created by someone"
 
-**Query completa**: 
+**Complete query**: 
 ```
 GET /api/v1.0/odata/order?$select=id,name,customer,order_status,cost,sales_tax,total&$filter=creator eq 'Support, Sean'
 ```
 
-**Parâmetros**:
+**Parameters**:
 - `$select`: `id,name,customer,order_status,cost,sales_tax,total`
 - `$filter`: `creator eq 'Support, Sean'`
 
-**Descrição**: Filtra pedidos pelo criador usando o campo `creator`.
+**Description**: Filters orders by creator using the `creator` field.
 
-**Observações importantes**:
-- O campo `creator` usa o formato "Sobrenome, Nome" (ex: "Support, Sean")
-- Deve ser usado exatamente como aparece na API, incluindo vírgula e espaço
-- Útil para filtrar pedidos por responsável
+**Important observations**:
+- The `creator` field uses the format "Lastname, Firstname" (ex: "Support, Sean")
+- Must be used exactly as it appears in the API, including comma and space
+- Useful for filtering orders by responsible person
 
 ---
 
-## Payment Terms (Termos de Pagamento)
+## Payment Terms
 
-### Exemplo 1: Termos de pagamento ativos com select
+### Example 1: Active payment terms with select
 
-**Nome do exemplo**: "Show me all of the active payment terms"
+**Example name**: "Show me all of the active payment terms"
 
-**Query completa**: 
+**Complete query**: 
 ```
 GET /api/v1.0/odata/payment_term?$select=id,name,active&$filter=active eq true
 ```
 
-**Parâmetros**:
+**Parameters**:
 - `$select`: `id,name,active`
 - `$filter`: `active eq true`
 
-**Descrição**: Retorna apenas os termos de pagamento ativos, selecionando apenas os campos especificados.
+**Description**: Returns only active payment terms, selecting only the specified fields.
 
-**Campos identificados**:
-- `id`: Identificador do termo de pagamento
-- `name`: Nome do termo de pagamento
-- `active`: Status ativo/inativo (boolean)
+**Identified fields**:
+- `id`: Payment term identifier
+- `name`: Payment term name
+- `active`: Active/inactive status (boolean)
 
 ---
 
-### Exemplo 2: Termos de pagamento ativos sem select
+### Example 2: Active payment terms without select
 
-**Nome do exemplo**: "Test payment terms sending no columns"
+**Example name**: "Test payment terms sending no columns"
 
-**Query completa**: 
+**Complete query**: 
 ```
 GET /api/v1.0/odata/payment_term?$filter=active eq true
 ```
 
-**Parâmetros**:
+**Parameters**:
 - `$filter`: `active eq true`
-- Sem `$select` especificado
+- No `$select` specified
 
-**Descrição**: Quando o parâmetro `$select` não é especificado, a API retorna todos os campos disponíveis da entidade.
+**Description**: When the `$select` parameter is not specified, the API returns all available fields of the entity.
 
-**Observações importantes**:
-- Omitir `$select` retorna todos os campos da entidade
-- Útil quando você precisa de todos os dados disponíveis
-- Pode resultar em respostas maiores
+**Important observations**:
+- Omitting `$select` returns all entity fields
+- Useful when you need all available data
+- May result in larger responses
 
 ---
 
-## Padrões e Observações Gerais
+## Patterns and General Observations
 
-### Operadores OData Utilizados
+### OData Operators Used
 
-- `eq`: Igual a (ex: `active eq true`, `order_status eq 'Active Project - In-Progress'`)
-- `gt`: Maior que (ex: `total gt 300000`)
-- `and`: Operador lógico E (ex: `total gt 10000 and order_status eq 'Active'`)
-- `or`: Operador lógico OU (ex: `status eq 'Active' or status eq 'Pending'`)
+- `eq`: Equal to (ex: `active eq true`, `order_status eq 'Active Project - In-Progress'`)
+- `gt`: Greater than (ex: `total gt 300000`)
+- `and`: Logical AND operator (ex: `total gt 10000 and order_status eq 'Active'`)
+- `or`: Logical OR operator (ex: `status eq 'Active' or status eq 'Pending'`)
 
-### Formato de Strings
+### String Format
 
-- Strings em filtros OData devem estar entre aspas simples: `'Active Project - In-Progress'`
-- Valores booleanos não usam aspas: `active eq true`
+- Strings in OData filters must be between single quotes: `'Active Project - In-Progress'`
+- Boolean values don't use quotes: `active eq true`
 
-### Campos Especiais
+### Special Fields
 
-- **`search`**: Filtro especial da API Topz para busca textual em múltiplos campos
-- **`creator`**: Formato "Sobrenome, Nome" (ex: "Support, Sean")
+- **`search`**: Special Topz API filter for text search across multiple fields
+- **`creator`**: Format "Lastname, Firstname" (ex: "Support, Sean")
 
-### Valores de Status Identificados
+### Identified Status Values
 
-- `order_status`: 'Active Project - In-Progress' (exemplo encontrado nos testes)
-
+- `order_status`: 'Active Project - In-Progress' (example found in tests)

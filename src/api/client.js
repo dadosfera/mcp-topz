@@ -2,32 +2,20 @@
  * HTTP Client for Topz OData API
  */
 
-import type {
-  TopzApiConfig,
-  ODataQueryOptions,
-  ODataResponse,
-  Order,
-  PaymentTerm,
-} from "./types.js";
 import { buildODataQuery } from "../utils/odata-builder.js";
 
 export class TopzApiClient {
-  private config: TopzApiConfig;
-
-  constructor(config: TopzApiConfig) {
+  constructor(config) {
     this.config = config;
   }
 
   /**
    * Make an authenticated request to the API
    */
-  private async request<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
+  async request(endpoint, options = {}) {
     const url = `${this.config.baseUrl}${endpoint}`;
 
-    const headers: Record<string, string> = {
+    const headers = {
       "Content-Type": "application/json",
       Accept: "application/json",
       Authorization: `Bearer ${this.config.apiKey}`,
@@ -42,10 +30,10 @@ export class TopzApiClient {
       const timeoutId = setTimeout(() => controller.abort(), 30000);
 
       const response = await fetch(url, {
-      ...options,
-      headers,
-      signal: controller.signal,
-    });
+        ...options,
+        headers,
+        signal: controller.signal,
+      });
 
       clearTimeout(timeoutId);
 
@@ -54,7 +42,7 @@ export class TopzApiClient {
       if (!response.ok) {
         const errorText = await response.text();
         console.error(`[MCP-TOPZ] Error response body:`, errorText.substring(0, 500));
-        let errorMessage: string;
+        let errorMessage;
 
         try {
           const errorJson = JSON.parse(errorText);
@@ -87,7 +75,7 @@ export class TopzApiClient {
         console.error(`[MCP-TOPZ] WARNING: Unexpected response structure. Keys:`, Object.keys(jsonData));
       }
       
-      return jsonData as T;
+      return jsonData;
     } catch (error) {
       // Enhanced error handling for network issues
       if (error instanceof Error) {
@@ -111,22 +99,20 @@ export class TopzApiClient {
   /**
    * Get the API schema
    */
-  async getSchema(): Promise<unknown> {
-    return this.request<unknown>("/api/v1.0/schema");
+  async getSchema() {
+    return this.request("/api/v1.0/schema");
   }
 
   /**
    * Query orders using OData syntax
    */
-  async queryOrders(
-    options: ODataQueryOptions = {}
-  ): Promise<ODataResponse<Order>> {
+  async queryOrders(options = {}) {
     const queryString = buildODataQuery(options);
     const endpoint = `/api/v1.0/odata/order${queryString}`;
     const fullUrl = `${this.config.baseUrl}${endpoint}`;
     console.error(`[MCP-TOPZ] Query Orders - URL: ${fullUrl}`);
     console.error(`[MCP-TOPZ] Query Orders - Options:`, JSON.stringify(options, null, 2));
-    const result = await this.request<ODataResponse<Order>>(endpoint);
+    const result = await this.request(endpoint);
     if (result && typeof result === 'object' && 'objects' in result) {
       console.error(`[MCP-TOPZ] Query Orders - Found ${result.objects.length} orders (totalSize: ${result.totalSize})`);
     }
@@ -136,24 +122,18 @@ export class TopzApiClient {
   /**
    * Query payment terms using OData syntax
    */
-  async queryPaymentTerms(
-    options: ODataQueryOptions = {}
-  ): Promise<ODataResponse<PaymentTerm>> {
+  async queryPaymentTerms(options = {}) {
     const queryString = buildODataQuery(options);
     const endpoint = `/api/v1.0/odata/payment_term${queryString}`;
-    return this.request<ODataResponse<PaymentTerm>>(endpoint);
+    return this.request(endpoint);
   }
 
   /**
    * Generic OData query for any entity
    */
-  async queryEntity<T>(
-    entityName: string,
-    options: ODataQueryOptions = {}
-  ): Promise<ODataResponse<T>> {
+  async queryEntity(entityName, options = {}) {
     const queryString = buildODataQuery(options);
     const endpoint = `/api/v1.0/odata/${entityName}${queryString}`;
-    return this.request<ODataResponse<T>>(endpoint);
+    return this.request(endpoint);
   }
 }
-
